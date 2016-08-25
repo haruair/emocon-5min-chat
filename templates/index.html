@@ -24,11 +24,19 @@
   <script>
     var socket = io('//' + location.hostname + ':8000');
     Vue.use(VueSocketio, socket);
+
+    function getCuteNickname() {
+      var nickname = localStorage.getItem('nickname');
+      nickname = nickname || ('코알라' + Math.round(Math.random() * 1000));
+      localStorage.setItem('nickname', nickname);
+      return nickname;
+    }
+
     new Vue({
       el: '#app',
       delimiters: ['${', '}'],
       data: {
-        nickname: '코알라' + Math.round(Math.random() * 100),
+        nickname: getCuteNickname(),
         body: '',
         messages: [{
           nickname: '대빵코알라',
