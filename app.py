@@ -27,7 +27,9 @@ def disconnect(sid):
     print('disconnected %s' % sid)
 
 if __name__ == '__main__':
+    app.debug = True
     sioApp = socketio.Middleware(sio, app)
 
-    eventlet.wsgi.server(eventlet.listen(('', 8000)), sioApp)
+    el = eventlet.wsgi.server(eventlet.listen(('', 8000)), sioApp)
+    el.serve_forever()
 
