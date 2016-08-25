@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>WeirdChatService</title>
+  <script src="https://npmcdn.com/vue@next/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='bower_components/vue-socket.io/vue-socketio.js') }}"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div v-for="message in filteredMessages">
+      ${ message.nickname }: ${ message.body }
+    </div>
+    <form v-on:submit.prevent="onSubmit">
+      <input type="text" v-model="nickname">
+      <input type="text" ref="body" v-model="body">
+      <button type="submit">send</button>
+    </form>
+  </div>
+
+  <script>
+    var socket = io('//' + location.hostname + ':8000');
+    Vue.use(VueSocketio, socket);
+    new Vue({
+      el: '#app',
+      delimiters: ['${', '}'],
+      data: {
+        nickname: '코알라' + Math.round(Math.random() * 100),
+        body: '',
+        messages: [{
+          nickname: '대빵코알라',
+          body: '입장을 환영합니다 🐨'
+        }]
+      },
+      sockets: {
+        'new message': function(data) {
+          this.messages.push(data);
+        }
+      },
+      computed: {
+        filteredMessages: function() {
+          return this.messages.slice(-10)
+        }
+      },
+      methods: {
+        onSubmit: function() {
+          var vm = this;
+          if (vm.body == '') {
+            return;
+          }
+          var newMessage = {
+            nickname: vm.nickname,
+            body: vm.body
+          };
+          vm.$socket.emit('send message', newMessage);
+
+          vm.messages.push(newMessage);
+
+          vm.body = '';
+          vm.$refs.body.focus();
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

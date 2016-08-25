@@ -1,0 +1,21 @@
+{
+  "name": "5min-chat",
+  "authors": [
+    "Edward Kim <edward@kobecreations.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "vue-socket.io": "*"
+  }
+}
